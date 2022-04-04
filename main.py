@@ -12,11 +12,19 @@ if __name__ == '__main__':
         'acept': '*/*',
         'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36'
     }
-    url = 'https://yandex.ru/images'
     path = pathlib.Path(pathlib.Path.cwd(), '3.jpg')
     print('Начинаем загрузку картинки...')
+    internet = False
+    while not internet:
+        try:
+            subprocess.check_call(["ping", "-c 1", "www.google.ru"])
+            print("Internet is up again!")
+            internet = True
+        except subprocess.CalledProcessError:
+            print("Internet is still down :(")
     while True:
         try:
+            url = 'https://yandex.ru/images'
             soup = load_url_content(url, headers)
             url = 'https://yandex.ru'
             print("Получил ссылки на рубрики")
@@ -34,7 +42,9 @@ if __name__ == '__main__':
             r = requests.get(url=link)
             with open(path, 'wb') as f:
                 f.write(r.content)
-            time.sleep(5)
+            if path.is_file():
+                print('Фаил есть!')
+            time.sleep(3)
             picture_path = path
             subprocess.Popen(
                 "DISPLAY=:0 GSETTINGS_BACKEND=dconf /usr/bin/gsettings set org.gnome.desktop.background picture-uri file://{0}".format(
@@ -43,3 +53,5 @@ if __name__ == '__main__':
             break
         except Exception as e:
             print(e)
+            print('Спим 10сек')
+            time.sleep(10)
