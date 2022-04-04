@@ -1,3 +1,5 @@
+import subprocess
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -15,3 +17,12 @@ def get_image_category(soup):
         for link in soup.find_all('a', class_="Link PopularRequestList-Preview"):
             category_links.append(link.get('href'))
     return category_links
+
+def check_connection(internet):
+    try:
+        subprocess.check_call(["ping", "-c 1", "www.google.ru"])
+        print("Internet is up again!")
+        internet = True
+    except subprocess.CalledProcessError:
+        print("Internet is still down :(")
+    return internet
