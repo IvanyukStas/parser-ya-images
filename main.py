@@ -5,7 +5,6 @@ import time
 import requests
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
-
 from functions import load_url_content, get_image_category, check_connection
 
 if __name__ == '__main__':
