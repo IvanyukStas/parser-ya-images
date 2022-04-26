@@ -26,20 +26,31 @@ if __name__ == '__main__':
             soup = load_url_content(url_images, headers)
             print("Получил ссылки на рубрики")
             link = get_image_category(soup)[0]
+            print('Загрузил первую ссылку на рубрику')
             soup = load_url_content(url+link, headers)
             links_of_images = soup.find_all('a', class_="serp-item__link")
+            print("Спарсил ссылки на картинки")
             count_of_links = len(links_of_images)
             link_image = links_of_images[random.randint(0, count_of_links)]
             image_links.append(link_image.get('href'))
             link = image_links[0]
+            print("Запускаю ьраузер для получения картинки")
             session = HTMLSession()
             r = session.get(url=url+link)
             r.html.render()
             soup = BeautifulSoup(r.html.html, 'lxml')
+            session.close()
+            print('Закрыли сессию')
+            print("Сварили суп")
+            with open('index.html', 'w') as f:
+                f.write(r.html.html)
             link = soup.find('img', class_="MMImage-Origin").get('src')
-            r = requests.get(url=link)
+            print("Получили картинку")
+            print(link)
+            r = requests.get(url='https:' + link)
             with open(path, 'wb') as f:
                 f.write(r.content)
+            print("Сохранили картинку")
             time.sleep(3)
             # set new background of system
             picture_path = path
