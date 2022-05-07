@@ -1,2 +1,5 @@
 *.jpg
 *.html
+/file_1.log
+/logs/
+/venv/
